@@ -1,0 +1,175 @@
+---
+title: "Kahekili, July 2025"
+format:
+  html:
+    self-contained: true
+    embed-resources: true
+editor: visual
+knitr:
+  opts_chunk:
+    fig-align: center
+    fig-width: 10
+    # fig-asp: 0.618
+    fig-asp: 1
+execute:
+  warning: false
+  echo: false
+---
+
+# Time-series plot
+
+```{r}
+#| fig-cap: "Figure 1. Time series plot of depth, temperature, salinity (from MicroCAT), pH (from SAMI; salinity and temperature-corrected from MicroCAT), and DO (from miniDOT) from July 13 to 16. Shaded yellow areas are daytimes (between sunrise and sunset) and grey areas are nighttimes.Tide level predictions are also shown on the depth plot."
+library(here)
+library(tidyverse)
+
+scripts <- list.files("Scripts", full.names = T)
+invisible(sapply(scripts[1:5], source))
+
+```
+
+## DO vs pH
+
+```{r}
+#| fig-width: 6
+#| fig-cap: "Figure 2. pH vs. DO linear regression."
+plot(DOvspH)
+```
+
+## Depth vs salinity
+
+```{r}
+#| fig-asp: 0.6
+#| fig-cap: "Figure 3. Plot of salinity vs. depth at each site."
+
+plot(SalvsTide)
+```
+
+## Summary statistics
+
+```{r}
+#| tbl-cap: "Table 1. Summary statistics of each parameter at each site. Values are reported as mean ± s.d. (range)."
+source(here("Scripts", "05-summary-stats.R"))
+knitr::kable(df_summary)
+```
+
+# TCMs
+
+Current data show a pronounced east-west current at Vent and S3, with stronger speeds at Vent. The control site is also characterized by stronger speeds albeit at more variable directions, mostly E-W and NE-SW.
+
+```{r}
+#| fig-cap: "Figure 4. Current data at bottom depth at sites Control, S3, and Vent."
+#| fig-asp: .5
+source(here("Scripts", "06-tcm.R"))
+plot(rose_tcm)
+```
+
+# Comparison of temperature sensors
+
+Temperature measurements were compared between the MicroCAT, SAMI, miniDOT, and TCM at both Vent and Control sites.
+
+```{r}
+#| fig-cap: "Figure 5. Time series plot of temperature measured by the different instruments."
+source(here("Scripts", "07-temp.R"))
+plot(plot_temp)
+
+```
+
+An offset was calculated, i.e. instrument temperature - MicroCAT temperature. The time series plot of the offset shows a lower temperature reading from the SAMI sensor compared to the MicroCAT CTD.
+
+```{r}
+#| fig-cap: "Figure 6. Time series plot of temperature offset (instrument - MicroCAT)."
+plot(plot_offset)
+```
+
+The distribution plot of offset values shows a more consistent (narrower and taller peak) offset throughout the deployment for the SAMI and TCM instruments, unlike the miniDOT logger.
+
+```{r}
+#| fig-cap: "Figure 7. Density plot showing the distribution of offset values of each sensor during the deployment."
+#| tbl-cap: "Table 2. Summary statistics of each instrument's temperature offset. Values are reported as mean ± s.d. (range)."
+plot(density_offset)
+knitr::kable(df_offset_summary)
+```
+
+On average, the SAMI temperature is lower by 0.09 ºC from the MicroCAT temperature. This corresponds to a 0.0011 increase in pH (sd = 0.0003) when the SAMI temperature is used for calculating pH.
+
+## Accuracy, precision, and resolution of temperature probe of each instrument:
+
+1.  MicroCAT
+
+    -   Accuracy: ± 0.002 °C (-5 to +35 °C); ± 0.01 (+35 to +45 °C)
+
+    -   Resolution: 0.0001 °C
+
+2.  SAMI
+
+    -   Accuracy: ± 0.1 °C
+
+    -   Precision: ± 0.01 °C
+
+    -   Resolution: 0.01 °C
+
+3.  miniDOT
+
+    -   Accuracy: ± 0.1 °C
+
+    -   Resolution: 0.001 °C
+
+4.  TCM
+
+    -   Accuracy: ± 0.1 °C (-5 to +30 °C); ± 0.2 (+30 to +50 °C)
+
+    -   Resolution: 0.005 °C (-5 to +30 °C); ± 0.01 (+30 to +50 °C)
+
+# Comparison of MicroCAT and CastAway
+
+Four sampling time points were available to compare the salinity and temperature measurements of MicroCAT and CastAway. Note that the CastAway deployment time was not in sync with the MicroCAT reading (15-min interval), hence the closest time point was chosen to compare with. Salinity was generally lower in CastAway, while its temperature was higher.
+
+```{r}
+#| fig-cap: "Figure 8. Plot of depth, salinity, and temperature measured by the MicroCAT and CastAway instruments at four sampling points."
+source(here("Scripts", "08-ctd.R"))
+plot(plot_tempsal)
+
+```
+
+```{r}
+#| tbl-cap: "Table 3. Calculated offset (CastAway - MicroCAT) at each sampling point."
+knitr::kable(df_tempsal_offset)
+```
+
+```{r}
+#| tbl-cap: "Table 4. Summary statistics of each parameter offset. Values are reported as mean ± s.d. (range)."
+knitr::kable(df_tempsal_summary)
+```
+
+## Accuracy, precision, and resolution of temperature, salinity, and pressure of each instrument:
+
+1.  MicroCAT
+
+    -   Temperature accuracy: ± 0.002 °C (-5 to +35 °C); ± 0.01 (+35 to +45 °C)
+
+    -   Temperature resolution: 0.0001 °C
+
+    -   Salinity accuracy: ± 0.01 (as shared by Chris of Sea-Bird) (0.003 mS/cm)
+
+    -   Salinity resolution: NA (0.0001 mS/cm)
+
+    -   Pressure accuracy: ± 0.02 dbar
+
+    -   Pressure resolution: 0.0004 dbar
+
+2.  CastAway
+
+    -   Temperature accuracy: ± 0.05 °C
+
+    -   Temperature resolution: 0.01 °C
+
+    -   Salinity accuracy: ± 0.1 (± 0.005 mS/cm)
+
+    -   Salinity resolution: 0.01 (0.001 mS/cm)
+
+    -   Pressure accuracy: ± 0.25 dbar
+
+    -   Pressure resolution: 0.01 dbar
+
+Note that salinity is a tricky variable to determine its accuracy and precision since it is a function of conductivity, temperature, and pressure. Comparing each parameter accuracy of the two sensors, the MicroCAT will yield a more accurate salinity derivation (see here: <https://blog.seabird.com/ufaqs/how-accurate-is-salinity-measured-by-my-ctd-what-factors-impact-accuracy/>).
