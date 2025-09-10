@@ -34,10 +34,10 @@ df_samipH_compare <- df_sami |>
          "SAMIpH_SAMITemp" = SAMIpH.y) |> 
   mutate(pHoffset = SAMIpH_SAMITemp - SAMIpH_MicroCATTemp) |> 
   summarise(pHoffset_mean = mean(pHoffset), pHoffset_sd = sd(pHoffset))
-    \(x) str_glue(round(mean(x), 2), " ± ", round(sd(x), 2), 
-                  " (", round(min(x), 2), " - ", round(max(x), 2), ")"))
-  )
-  
+  #   \(x) str_glue(round(mean(x), 2), " ± ", round(sd(x), 2), 
+  #                 " (", round(min(x), 2), " - ", round(max(x), 2), ")"))
+  # )
+  # 
   
 
 

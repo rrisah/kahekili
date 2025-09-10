@@ -1,0 +1,27 @@
+---
+title: "Kahekili bottle data, July 2025"
+format:
+  html:
+    self-contained: true
+    embed-resources: true
+editor: visual
+knitr:
+  opts_chunk:
+    fig-align: center
+    fig-width: 10
+    # fig-asp: 0.618
+    fig-asp: 1
+execute:
+  warning: false
+  echo: false
+---
+
+```{r}
+library(here)
+library(tidyverse)
+
+scripts <- list.files("Scripts", full.names = T)
+source(here("Scripts", "00-library.R"))
+source(here("Scripts", "09-data.R"))
+lapply(boxplots3, print)
+```
