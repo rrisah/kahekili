@@ -42,5 +42,7 @@ boxplots2 <- map2(boxplots,
 
 boxplots3 <- map2(boxplots2, 
                   variable_labels, ~ {
-                    .x + labs(y = .y)
+                    .x + labs(y = .y, x = NULL)
                   })
+
+          

@@ -9,19 +9,43 @@ knitr:
   opts_chunk:
     fig-align: center
     fig-width: 10
-    # fig-asp: 0.618
-    fig-asp: 1
+    fig-asp: 0.618
 execute:
   warning: false
   echo: false
 ---
 
+# Sites
+
 ```{r}
 library(here)
 library(tidyverse)
-
 scripts <- list.files("Scripts", full.names = T)
 source(here("Scripts", "00-library.R"))
+```
+
+![Figure 1. Map of the six sites](images/map-03.jpeg){fig-align="center" width="503"}
+
+# Summary plots
+
+## Temperature and salinity
+
+```{r}
+#| fig-cap: "Figure 2. Boxplot of temperature and salinity"
 source(here("Scripts", "09-data.R"))
-lapply(boxplots3, print)
+boxplots3[[1]] + boxplots3[[2]]
+```
+
+## Nutrients
+
+```{r}
+#| fig-asp: 1.236
+boxplots3[[3]] + boxplots3[[4]] + boxplots3[[5]] + boxplots3[[6]]
+```
+
+## Carbonate chemistry
+
+```{r}
+#| fig-asp: 1.854
+(boxplots3[[7]] | boxplots3[[8]]) / (boxplots3[[9]] | boxplots3[[10]]) / (boxplots3[[11]] | plot_spacer())
 ```

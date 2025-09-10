@@ -4,8 +4,10 @@ library(hrbrthemes)
 library(climaemet)
 library(hms)
 library(ggpmisc)
-library(tidyverse)
 library(readxl)
+library(patchwork)
+library(knitr)
+library(tidyverse)
 # Set ggplot theme
 theme_set(theme_ipsum_rc() +
             theme(strip.text.y = element_text(hjust = 0.5),
