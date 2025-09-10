@@ -1,1 +1,44 @@
-df_metadata <- read_csv(str_glue("{path_bottle}/Notes - Metadata.csv"))
+df_metadata <- read_csv(str_glue("{path_bottle}/Notes - Metadata.csv")) |> 
+  mutate(across(c(`NOx (μM)`, `Silicate (μM)`), as.numeric))
+
+df_spatial <- df_metadata |> 
+  filter(!Site == "Vent_gw" ) |> 
+  mutate(Site = factor(Site, levels = c("Vent", "S1", "S2", "S3", "S4", "Control"))) 
+
+variables <- df_spatial |> 
+  select(13:24 & where(is.numeric)) |> 
+  colnames()
+
+variable_labels = variables
+variable_labels2 <- c("Salinity",
+                     expression(paste("Total alkalinity (μmol kg"^"-1", ")")),
+                     expression(paste("Dissolved inorganic carbon (μmol kg"^"-1", ")")),
+                     "pH", expression(paste("Aragonite saturation state (\U003A9"[""], ")")), 
+                     "Nitrate (μM)",
+                     "Phosphate (\U003BCM)", 
+                     "Silicate (\U003BCM)")
+
+boxplots <- imap(select(df_spatial, any_of(variables)), ~ {
+  ggplot(df_spatial, aes(Site, .x)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_jitter(alpha = 0.1) +
+    scale_y_continuous(
+      trans='log10') 
+})
+
+boxplots2 <- map2(boxplots, 
+                  variables, ~ {
+                    df_mean <- df_spatial |> 
+                      pivot_longer(.y, names_to = "variable") |> 
+                      group_by(Site, variable) |> 
+                      summarise(mean = mean(value, na.rm = T))
+                    
+                    .x +
+                      geom_point(data = df_mean |> filter(variable == .y), 
+                                 aes(Site, mean), color = "red", size = 3) 
+                  })
+
+boxplots3 <- map2(boxplots2, 
+                  variable_labels, ~ {
+                    .x + labs(y = .y)
+                  })

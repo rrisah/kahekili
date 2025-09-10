@@ -1,6 +1,3 @@
-# library(readxl)
-# library(sf)
-# library(rstatix)
 library(broom)
 library(lmodel2)
 library(hrbrthemes)
