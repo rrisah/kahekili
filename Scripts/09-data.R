@@ -2,26 +2,28 @@ df_metadata <- read_csv(str_glue("{path_bottle}/Notes - Metadata.csv")) |>
   mutate(across(c(`NOx (μM)`, `Silicate (μM)`), as.numeric))
 
 df_spatial <- df_metadata |> 
-  filter(!Site == "Vent_gw" ) |> 
-  mutate(Site = factor(Site, levels = c("Vent", "S1", "S2", "S3", "S4", "Control"))) 
+  filter(!`Collected for` == "Calibration") |> 
+  mutate(Site = factor(Site, levels = c("Vent", "Vent_gw", "S1", "S2", "S3", "S4", "Control"),
+                       labels = c("Seep", "Groundwater", "S1", "S2", "S3", "S4", "Control"))) |> 
+  filter(!Site == "Groundwater")
 
 variables <- df_spatial |> 
   select(13:24 & where(is.numeric)) |> 
   colnames()
 
-variable_labels = variables
-variable_labels2 <- c("Salinity",
-                     expression(paste("Total alkalinity (μmol kg"^"-1", ")")),
-                     expression(paste("Dissolved inorganic carbon (μmol kg"^"-1", ")")),
-                     "pH", expression(paste("Aragonite saturation state (\U003A9"[""], ")")), 
-                     "Nitrate (μM)",
-                     "Phosphate (\U003BCM)", 
-                     "Silicate (\U003BCM)")
+variable_labels <- c("Temperature (\U000B0 C)", "Salinity", 
+                     "Nitrate + nitrite (μM)", "Phosphate (\U003BCM)", "Silicate (\U003BCM)", "Ammonium (\U003BCM)",
+                     expression(paste("TA (μmol kg"^"-1", ")")),
+                     expression(paste("DIC (μmol kg"^"-1", ")")),
+                     expression("pH"~italic("in situ")), expression(paste(italic(p),"CO"[2]," (μatm)")),
+                     expression("\U003A9"["Aragonite"]) 
+                    )
 
 boxplots <- imap(select(df_spatial, any_of(variables)), ~ {
   ggplot(df_spatial, aes(Site, .x)) +
-    geom_boxplot(outlier.shape = NA) +
-    geom_jitter(alpha = 0.1) +
+    geom_boxplot() +
+      # outlier.shape = NA) +
+    geom_jitter(alpha = 0.3) +
     scale_y_continuous(
       trans='log10') 
 })
