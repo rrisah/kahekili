@@ -1,14 +1,17 @@
-df_metadata <- read_csv(str_glue("{path_bottle}/Notes - Metadata.csv")) |> 
-  mutate(across(c(`NOx (μM)`, `Silicate (μM)`), as.numeric))
+df_metadata <- read_csv(str_glue("{path_bottle}/Notes - Metadata.csv"),
+                        col_types = cols(Date = col_date("%m/%d/%Y"))) |> 
+  mutate(across(c(`NOx (μM)`, `Silicate (μM)`), as.numeric),
+         Site = factor(Site, levels = c("Vent", "Vent_gw", "S1", "S2", "S3", "S4", "Control"),
+                       labels = c("Seep", "Groundwater", "S1", "S2", "S3", "S4", "Control"))) |> 
+        mutate(DateTime = ymd(Date) + hms(Time), .keep = "unused") |>
+  relocate(DateTime)
 
 df_spatial <- df_metadata |> 
   filter(!`Collected for` == "Calibration") |> 
-  mutate(Site = factor(Site, levels = c("Vent", "Vent_gw", "S1", "S2", "S3", "S4", "Control"),
-                       labels = c("Seep", "Groundwater", "S1", "S2", "S3", "S4", "Control"))) |> 
   filter(!Site == "Groundwater")
 
 variables <- df_spatial |> 
-  select(13:24 & where(is.numeric)) |> 
+  select(12:23 & where(is.numeric)) |> 
   colnames()
 
 variable_labels <- c("Temperature (\U000B0 C)", "Salinity", 
@@ -37,12 +40,10 @@ boxplots2 <- map2(boxplots,
                     
                     .x +
                       geom_point(data = df_mean |> filter(variable == .y), 
-                                 aes(Site, mean), color = "red", size = 3) 
+                                 aes(Site, mean), color = "orangered3", size = 3) 
                   })
 
 boxplots3 <- map2(boxplots2, 
                   variable_labels, ~ {
                     .x + labs(y = .y, x = NULL)
                   })
-
-          

@@ -19,7 +19,6 @@ execute:
 
 ```{r}
 library(here)
-library(tidyverse)
 scripts <- list.files("Scripts", full.names = T)
 source(here("Scripts", "00-library.R"))
 ```
@@ -27,6 +26,8 @@ source(here("Scripts", "00-library.R"))
 ![Figure 1. Map of the six sites](images/map-03.jpeg){fig-align="center" width="503"}
 
 # Summary plots
+
+Boxplots with
 
 ## Temperature and salinity
 
@@ -48,4 +49,12 @@ boxplots3[[3]] + boxplots3[[4]] + boxplots3[[5]] + boxplots3[[6]]
 ```{r}
 #| fig-asp: 1.854
 (boxplots3[[7]] | boxplots3[[8]]) / (boxplots3[[9]] | boxplots3[[10]]) / (boxplots3[[11]] | plot_spacer())
+```
+
+# Comparing groundwater with ambient seawater at seep site
+
+```{r}
+#| fig-asp: 1.236
+source(here("Scripts", "10-data-seeps.R"))
+p()
 ```
