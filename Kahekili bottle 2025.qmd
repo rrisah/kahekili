@@ -17,6 +17,8 @@ execute:
 
 # Sites
 
+Six sites (Seep, S1-S4, Control) were sampled for nutrients and carbonate chemistry. Samples were collected (n = 6) at daytime high and low tide, and nighttime low tide for two days.
+
 ```{r}
 library(here)
 scripts <- list.files("Scripts", full.names = T)
@@ -27,7 +29,7 @@ source(here("Scripts", "00-library.R"))
 
 # Summary plots
 
-Boxplots with
+Boxplots of each parameter per site. Y-axis is in log-scale. Sites are arranged from the Seep to the Control site. Red circles denote mean value, grey circles denote individual data points, black circles denote outliers.
 
 ## Temperature and salinity
 
@@ -51,7 +53,7 @@ boxplots3[[3]] + boxplots3[[4]] + boxplots3[[5]] + boxplots3[[6]]
 (boxplots3[[7]] | boxplots3[[8]]) / (boxplots3[[9]] | boxplots3[[10]]) / (boxplots3[[11]] | plot_spacer())
 ```
 
-# Comparing groundwater with ambient seawater at seep site
+## Comparing groundwater with ambient seawater at Seep site
 
 ```{r}
 #| fig-asp: 1.236
