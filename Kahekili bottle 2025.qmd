@@ -60,3 +60,10 @@ boxplots3[[3]] + boxplots3[[4]] + boxplots3[[5]] + boxplots3[[6]]
 source(here("Scripts", "10-data-seeps.R"))
 p()
 ```
+
+## Comparing between day/tide phase
+
+```{r}
+source(here("Scripts", "10-plot-by-tide.R"))
+plot_tides
+```

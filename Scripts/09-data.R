@@ -2,16 +2,18 @@ df_metadata <- read_csv(str_glue("{path_bottle}/Notes - Metadata.csv"),
                         col_types = cols(Date = col_date("%m/%d/%Y"))) |> 
   mutate(across(c(`NOx (μM)`, `Silicate (μM)`), as.numeric),
          Site = factor(Site, levels = c("Vent", "Vent_gw", "S1", "S2", "S3", "S4", "Control"),
-                       labels = c("Seep", "Groundwater", "S1", "S2", "S3", "S4", "Control"))) |> 
-        mutate(DateTime = ymd(Date) + hms(Time), .keep = "unused") |>
-  relocate(DateTime)
+                       labels = c("Seep", "Groundwater", "S1", "S2", "S3", "S4", "Control")),
+         DateTime = ymd(Date) + hms(Time), 
+         Tide = str_glue("{`Tide phase`} tide, {`Day phase`}"),
+         .keep = "unused") |>
+  relocate(DateTime, Tide)
 
 df_spatial <- df_metadata |> 
   filter(!`Collected for` == "Calibration") |> 
   filter(!Site == "Groundwater")
 
 variables <- df_spatial |> 
-  select(12:23 & where(is.numeric)) |> 
+  select(11:22 & where(is.numeric)) |> 
   colnames()
 
 variable_labels <- c("Temperature (\U000B0 C)", "Salinity", 

@@ -7,6 +7,7 @@ library(ggpmisc)
 library(readxl)
 library(patchwork)
 library(knitr)
+library(DescTools)
 library(tidyverse)
 # Set ggplot theme
 theme_set(theme_ipsum_rc() +
