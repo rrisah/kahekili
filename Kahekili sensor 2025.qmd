@@ -28,6 +28,13 @@ invisible(sapply(scripts[1:5], source))
 
 ```
 
+## Hourly climatology
+
+```{r}
+source(here("Scripts", "05-sensor-clim.R"))
+p()
+```
+
 ## DO vs pH
 
 ```{r}
