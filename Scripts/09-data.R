@@ -16,6 +16,8 @@ variables <- df_spatial |>
   select(11:22 & where(is.numeric)) |> 
   colnames()
 
+variable_names <- word(variables, 1)
+
 variable_labels <- c("Temperature (\U000B0 C)", "Salinity", 
                      "Nitrate + nitrite (μM)", "Phosphate (\U003BCM)", "Silicate (\U003BCM)", "Ammonium (\U003BCM)",
                      expression(paste("TA (μmol kg"^"-1", ")")),
@@ -49,3 +51,5 @@ boxplots3 <- map2(boxplots2,
                   variable_labels, ~ {
                     .x + labs(y = .y, x = NULL)
                   })
+
+map2(boxplots3, variable_names, ~saveplot(.x, .y, 5, 5))

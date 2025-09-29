@@ -29,9 +29,9 @@ path_outputs <- str_glue("{path_main}/2025 July/Outputs")
 path_bottle <- str_glue("{path_main}/2025 July/Bottle data")
 # Function for saving plot
 saveplot = \(x, name, h, w) {
-  ggsave(str_glue("{path_plots}/plot-{format(Sys.time(), '%Y%m%d-%H%M%S')}-{name}.png"),
+  ggsave(str_glue("{path_plots}/plot-{format(Sys.time(), '%Y%m%d-%H%M%S')}-{name}.pdf"),
          plot = x,
-         # device = cairo_pdf,
+         device = cairo_pdf,
          height = h,
          width = w,
          units = "in",
