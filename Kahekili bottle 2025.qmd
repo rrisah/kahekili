@@ -17,7 +17,7 @@ execute:
 
 # Sites
 
-Six sites (Seep, S1-S4, Control) were sampled for nutrients and carbonate chemistry. Samples were collected (n = 6) at daytime high and low tide, and nighttime low tide for two days.
+Six sites (Seep, S1-S4, Control) were sampled for nutrients and carbonate chemistry. Samples were collected (n = 6) at daytime (both high and low tide), and nighttime low tide for two days.
 
 ```{r}
 library(here)
