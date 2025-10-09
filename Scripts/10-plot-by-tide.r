@@ -16,6 +16,6 @@ plot_tides <- map2(variables, select(df_spatial, any_of(variables)), ~ {
 
 plot_tides <- map2(plot_tides, 
                   variable_labels, ~ {
-                    .x + labs(y = .y, x = NULL)
+                    .x + labs(y = .y, x = " ")
                   })
 p()
