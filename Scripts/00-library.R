@@ -10,15 +10,17 @@ library(knitr)
 library(DescTools)
 library(tidyverse)
 # Set ggplot theme
-theme_set(theme_ipsum_rc() +
-            theme(strip.text.y = element_text(hjust = 0.5),
-                  axis.title.x = element_text(hjust = 0.5, size = 16),
-                  axis.title.y = element_text(hjust = 0.5, size = 16),
-                  strip.placement = "outside",
-                  legend.position = "bottom",
-                  # panel.grid.major = element_blank(),
-                  panel.grid.minor = element_blank()
-                  )
+theme_set(
+  theme_ipsum_rc() +
+    theme(
+      strip.text.y = element_text(hjust = 0.5),
+      axis.title.x = element_text(hjust = 0.5, size = 16),
+      axis.title.y = element_text(hjust = 0.5, size = 16),
+      strip.placement = "outside",
+      legend.position = "bottom",
+      # panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank()
+    )
 )
 # Set path sensor
 path_main <- dirname(getwd())
@@ -29,17 +31,19 @@ path_outputs <- str_glue("{path_main}/2025 July/Outputs")
 path_bottle <- str_glue("{path_main}/2025 July/Bottle data")
 # Function for saving plot
 saveplot = \(x, name, h, w) {
-  ggsave(str_glue("{path_plots}/plot-{format(Sys.time(), '%Y%m%d-%H%M%S')}-{name}.pdf"),
-         plot = x,
-         device = cairo_pdf,
-         height = h,
-         width = w,
-         units = "in",
-         dpi = 300
+  ggsave(
+    str_glue(
+      "{path_plots}/plot-{format(Sys.time(), '%Y%m%d-%H%M%S')}-{name}.jpeg"
+    ),
+    plot = x,
+    #  device = cairo_pdf,
+    height = h,
+    width = w,
+    units = "in",
+    dpi = 300
   )
 }
 
 p = \() {
   plot(last_plot())
 }
-  
