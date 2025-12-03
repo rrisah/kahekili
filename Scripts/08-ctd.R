@@ -1,6 +1,8 @@
 df_tempsal <- read_excel(str_glue("{path_sensor}/tempsal.xlsx")) |> 
   mutate(DateTime = make_datetime(year(Date), month(Date), day(Date), hour(Time), minute(Time),
-              tz = "Pacific/Honolulu"), .keep = "unused")
+              tz = "Pacific/Honolulu"), .keep = "unused") |> 
+  mutate(Site = factor(Site, levels = c("Vent", "Control"),
+                       labels = c("Seep", "Control")))
 
 df_tempsal_long <- df_tempsal |> 
   pivot_longer(c(Depth, Temperature, Salinity), names_to = "variable") |> 

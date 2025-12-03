@@ -13,6 +13,8 @@ df_sensors_clim |>
   geom_line(aes(x=Hour, y=mean, group=Site,color=Site),size=1, alpha=0.8) +
   facet_wrap( ~ variable, ncol = 1, scales = "free_y", strip.position = "left") +
   labs(x = "Hour of the Day", y = NULL) +
-  scale_color_brewer(palette = "Set1") +
+  scale_color_manual(values = color_seep_control) +
+  scale_fill_manual(values = color_seep_control) +
   scale_x_continuous(expand = c(0, 0), breaks= c(0,3, 6, 9, 12, 15, 18, 21, 23)) 
-  
+
+saveplot(last_plot(), "sensors-hourly", 10, 7)   

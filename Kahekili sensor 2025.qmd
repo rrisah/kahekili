@@ -24,7 +24,7 @@ library(here)
 library(tidyverse)
 
 scripts <- list.files("Scripts", full.names = T)
-invisible(sapply(scripts[1:5], source))
+invisible(sapply(scripts[1:6], source))
 
 ```
 

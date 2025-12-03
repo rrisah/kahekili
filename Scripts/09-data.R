@@ -3,10 +3,11 @@ df_metadata <- read_csv(str_glue("{path_bottle}/Notes - Metadata.csv"),
   mutate(across(c(`NOx (μM)`, `Silicate (μM)`), as.numeric),
          Site = factor(Site, levels = c("Vent", "Vent_gw", "S1", "S2", "S3", "S4", "Control"),
                        labels = c("Seep", "Groundwater", "S1", "S2", "S3", "S4", "Control")),
-         DateTime = ymd(Date) + hms(Time), 
+         DateTime = mdy_hms(paste(Date, Time)),
          Tide = str_glue("{`Tide phase`} tide, {`Day phase`}"),
-         .keep = "unused") |>
-  relocate(DateTime, Tide)
+         .keep = "unused") |> 
+  relocate(DateTime, Tide) |>
+  filter(!Site %in% c("S1", "S4"))
 
 df_spatial <- df_metadata |> 
   filter(!`Collected for` == "Calibration") |> 
@@ -53,3 +54,15 @@ boxplots3 <- map2(boxplots2,
                   })
 
 map2(boxplots3, variable_names, ~saveplot(.x, .y, 5, 5))
+
+df_summary_bottle <- df_spatial |>
+  select(Site, "Temperature (Celsius)", "Salinity (Practical Salinity Scale)", "NOx (μM)" , "Nitrite (μM)", 
+         "Phosphate (μM)", "Silicate (μM)", "Ammonia (μM)", "TA (μmol kg-1)", "DIC (μmol kg-1)", "pH in situ", 
+         "pCO2 in situ", "Aragonite") |>  
+  group_by(Site) |>
+  summarise(across(where(is.numeric), list(
+    \(x) str_glue(round(mean(x, na.rm = T), 2), " ± ", round(sd(x, na.rm = T), 2), 
+                  " (", round(min(x, na.rm = T), 2), " - ", round(max(x, na.rm = T), 2), ")")
+  ), .names = "{.col}"))
+
+write_csv(df_summary_bottle, str_glue("{path_outputs}/summary_bottle.csv"))

@@ -25,4 +25,6 @@ df_minidot <- bind_rows(df_minidot_control, df_minidot_vent) |>
   ))
 
 df_sensors <- df_microcat_sami |> 
-  left_join(df_minidot, by = c("DateTime", "Site"))
+  left_join(df_minidot, by = c("DateTime", "Site")) |> 
+  mutate(Site = factor(Site, levels = c("Vent", "Control"),
+                labels = c("Seep", "Control")))

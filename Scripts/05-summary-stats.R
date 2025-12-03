@@ -1,7 +1,7 @@
 # Summary
 
 df_summary <- df_sensors |>
-  select(Temperature, Salinity, SAMIpH, `Dissolved Oxygen`, Site) |> 
+  select(Depth, Temperature, Salinity, SAMIpH, `Dissolved Oxygen`, Site) |> 
   group_by(Site) |>
   summarise(across(where(is.numeric), list(
     \(x) str_glue(round(mean(x), 2), " ± ", round(sd(x), 2), 

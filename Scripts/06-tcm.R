@@ -1,17 +1,19 @@
-
 list_tcm <- list.files(str_glue("{path_sensor}/TCM"), pattern = "(Current)+(.csv)", full.names = T)
-df_tcm <-  map2(list_tcm, c("S3", "Vent", "Control"),
+df_tcm <-  map2(list_tcm, c("S4", "S3", "Vent", "Control"),
                 \(x, y) read_csv(x) |> 
                   mutate(Site = y)
 ) |> 
   bind_rows() |> 
   rename(DateTime = "ISO 8601 Time") |> 
-  mutate(DateTime = force_tz(DateTime, tzone = "Pacific/Honolulu")) |> 
+  mutate(DateTime = force_tz(DateTime, tzone = "Pacific/Honolulu"),
+         Site = factor(Site, levels = c("Vent", "S3", "S4", "Control"),
+                       labels = c("Seep", "S3", "S4", "Control"))) |> 
   filter(
-    case_when(Site == "S3" ~ DateTime > "2025-07-13 19:30:01" & DateTime < "2025-07-16 07:05:02",
-              Site == "Vent" ~ DateTime > "2025-07-13 10:30:00" & DateTime < "2025-07-16 07:15:02",
-              Site == "Control" ~ DateTime > "2025-07-13 09:00:00" & DateTime < "2025-07-16 08:30:02"
-    )) 
+    case_when(Site == "S4" ~ DateTime > "2025-07-13 18:30:01" & DateTime < "2025-07-16 06:50:02",
+              Site == "S3" ~ DateTime > "2025-07-13 19:30:01" & DateTime < "2025-07-16 07:05:02",
+              Site == "Seep" ~ DateTime > "2025-07-13 10:30:00" & DateTime < "2025-07-16 07:10:02",
+              Site == "Control" ~ DateTime > "2025-07-13 09:00:00" & DateTime < "2025-07-16 08:20:02"
+    ))
 
 rose_tcm <- ggwindrose(
   speed = df_tcm$`Speed (cm/s)`,
@@ -19,7 +21,7 @@ rose_tcm <- ggwindrose(
   speed_cuts = seq(0, 30, 10),
   legend_title = "Current speed (cm/s)",
   calm_wind = 0,
-  n_col = 3,
+  n_col = 2,
   stack_reverse = T,
   facet = df_tcm$Site) +
   theme(legend.position = "bottom")
@@ -48,4 +50,3 @@ ggplot(df_tcm_binned, aes(x=DateTime, y=y_axis)) +
     minor_breaks = "3 hours") +
   scale_y_continuous(breaks = y_axis, labels = as.character(abs(y_axis)/wind_scale)) +
   facet_grid(Site ~ ., switch = "y")
-  # coord_equal(ylim = c(min(y_axis/wind_scale), max(y_axis/wind_scale)))

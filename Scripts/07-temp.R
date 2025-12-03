@@ -1,16 +1,18 @@
 list_tcm_temp <- list.files(str_glue("{path_sensor}/TCM"), pattern = "(Temperature)+(.csv)", full.names = T)
-df_tcm_temp <-  map2(list_tcm_temp, c("S3", "Vent", "Control"),
+df_tcm_temp <-  map2(list_tcm_temp, c("S4", "S3", "Vent", "Control"),
                 \(x, y) read_csv(x) |> 
                   mutate(Site = y)
 ) |> 
   bind_rows() |> 
   rename(DateTime = "ISO 8601 Time") |> 
-  mutate(DateTime = force_tz(DateTime, tzone = "Pacific/Honolulu")) |> 
+  mutate(DateTime = force_tz(DateTime, tzone = "Pacific/Honolulu"),
+         Site = factor(Site, levels = c("Vent", "S3", "S4", "Control"),
+                       labels = c("Seep", "S3", "S4", "Control"))) |>  
   filter(
-    case_when(Site == "S3" ~ DateTime > "2025-07-13 19:29:01" & DateTime < "2025-07-16 07:05:02",
-              Site == "Vent" ~ DateTime > "2025-07-13 10:29:00" & DateTime < "2025-07-16 07:15:02",
-              Site == "Control" ~ DateTime > "2025-07-13 08:59:00" & DateTime < "2025-07-16 08:30:02"
-              
+    case_when(Site == "S4" ~ DateTime > "2025-07-13 18:30:01" & DateTime < "2025-07-16 06:50:02",
+              Site == "S3" ~ DateTime > "2025-07-13 19:30:01" & DateTime < "2025-07-16 07:05:02",
+              Site == "Seep" ~ DateTime > "2025-07-13 10:30:00" & DateTime < "2025-07-16 07:10:02",
+              Site == "Control" ~ DateTime > "2025-07-13 09:00:00" & DateTime < "2025-07-16 08:20:02"
     )) |> 
   # mutate(DateTime = floor_date(DateTime, "1 minutes") + seconds(1))  |> 
   mutate(DateTime = round_date(DateTime, "2 minutes") + seconds(1)) |> 
@@ -21,7 +23,7 @@ df_tcm_temp <-  map2(list_tcm_temp, c("S3", "Vent", "Control"),
     minute(DateTime) %in% c(14, 44) ~ DateTime + minutes(1),
     .default = DateTime
   )) |> 
-  filter(Site %in% c('Control', 'Vent'))
+  filter(Site %in% c('Control', 'Seep'))
 
 df_temp <- df_sensors |> 
   left_join(df_tcm_temp, by = c("DateTime", "Site")) |> 
