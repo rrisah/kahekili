@@ -6,8 +6,8 @@ df_metadata <- read_csv(str_glue("{path_bottle}/Notes - Metadata.csv"),
          DateTime = mdy_hms(paste(Date, Time)),
          Tide = str_glue("{`Tide phase`} tide, {`Day phase`}"),
          .keep = "unused") |> 
-  relocate(DateTime, Tide) |>
-  filter(!Site %in% c("S1", "S4"))
+  relocate(DateTime, Tide)
+  # filter(!Site %in% c("S1", "S4"))
 
 df_spatial <- df_metadata |> 
   filter(!`Collected for` == "Calibration") |> 

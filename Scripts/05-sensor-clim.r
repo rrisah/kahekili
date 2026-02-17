@@ -11,7 +11,8 @@ df_sensors_clim |>
   ggplot() +
   geom_ribbon(aes(x=Hour,ymin=lower, ymax=upper, group=Site,fill=Site), alpha=0.3)+
   geom_line(aes(x=Hour, y=mean, group=Site,color=Site),size=1, alpha=0.8) +
-  facet_wrap( ~ variable, ncol = 1, scales = "free_y", strip.position = "left") +
+  facet_wrap( ~ variable, ncol = 1, scales = "free_y", strip.position = "left",
+              labeller = facet_labels) +
   labs(x = "Hour of the Day", y = NULL) +
   scale_color_manual(values = color_seep_control) +
   scale_fill_manual(values = color_seep_control) +

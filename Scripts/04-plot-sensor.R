@@ -1,7 +1,9 @@
+# Sensor variables
+variable_sensors = c("Depth", "Temperature", "Salinity", "SAMIpH", "Dissolved Oxygen")
 # Plot sensor data
 df_sensors_long <- df_sensors |> 
   pivot_longer(c("Depth", "Temperature", "Salinity", "SAMIpH", "Dissolved Oxygen"), names_to ='variable') |> 
-  mutate(variable = factor(variable, levels = c("Depth", "Temperature", "Salinity", "SAMIpH", "Dissolved Oxygen")))
+  mutate(variable = factor(variable, levels = variable_sensors))
 # Facet labels
 facet_labels = as_labeller(c(Depth = "Depth~(m)", Temperature = "Temperature~(degree*C)", Salinity = "Salinity", 
                              SAMIpH = "pH", `Dissolved Oxygen` = "DO~(mg~L^-1)"),
@@ -15,11 +17,12 @@ df_tide <- read_tsv(str_glue("{path_sensor}/Lahaina, Maui Island, Hawaii.txt"),
   rename(value = Time,
          Tide = Pred) |> 
   select(DateTime, value, Tide, variable) |> 
-  mutate(value_string = case_when(
-    value > 0 ~ str_glue("+{value}"),
-    .default = as.character(value)
-  ),
-  label = str_glue("{Tide} ({value_string})")) 
+  mutate(variable = factor(variable, levels = variable_sensors),
+         value_string = case_when(
+           value > 0 ~ str_glue("+{value}"),
+           .default = as.character(value)
+         ),
+         label = str_glue("{Tide} ({value_string})")) 
 # Shaded day/night
 rect_sensor <- data.frame(DateTime = as.POSIXct(c("2025-07-13 07:00:00", "2025-07-13 19:16:00",
                                                   "2025-07-14 05:58:00", "2025-07-14 19:16:00",
